@@ -1,11 +1,22 @@
 try:
-    import hashlib,socket,uuid,os,subprocess,requests,time,json,sys
+    import hashlib,socket,uuid,os,subprocess,requests,time,json,socket
     from colorama import Fore, Style, init
     from datetime import datetime
 except ImportError:
-    print("LỖI !!! Vui lòng liên hệ admin để báo lỗi và được khắc phục sớm nhất.")
+    print("LỖI !!! Vui lòng liên hệ admin để báo lỗi và được khắc phục sớm nhất. Zalo:0582932697")
     os._exit(0)
 init()
+def get_ip_address():
+    try:
+        # Tạo một kết nối đến một địa chỉ mạng bất kỳ
+        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        s.connect(("8.8.8.8", 80))  # Sử dụng DNS của Google để kết nối
+        ip_address = s.getsockname()[0]  # Lấy địa chỉ IP của máy tính
+        s.close()
+        return ip_address
+    except Exception as e:
+        return f"Đã xảy ra lỗi: {e}"
+print("Địa chỉ IP của bạn là:", get_ip_address())
 
 #Key Code
 
@@ -42,28 +53,6 @@ def generate_unique_hwi():
     data = '_'.join(components)
     unique_hwi = hashlib.sha256(data.encode()).hexdigest()
     return unique_hwi
-
-def print_colored_cycle(text, delay=0.1):
-    colors = [
-        "\033[31m",  # Red
-        "\033[32m",  # Green
-        "\033[33m",  # Yellow
-        "\033[34m",  # Blue
-        "\033[35m",  # Magenta
-        "\033[36m",  # Cyan
-        "\033[37m",  # White
-    ]
-    reset = "\033[0m"
-    
-    for i in range(len(text)):
-        color = colors[i % len(colors)]
-        sys.stdout.write(color + text[i] + reset)
-        sys.stdout.flush()
-        time.sleep(delay)
-    print()  # Move to the next line after printing the text
-
-# Example usage:
-#print_colored_cycle("Chào Mừng Đến Với Dream League Soccer Tool", 0.001)
 print("----------------------------------------------------------------------")
 print("Bản Quyền Thuộc Về Lê Minh Trí")
 print("----------------------------------------------------------------------")
@@ -134,6 +123,7 @@ def checkkey():
                 time.sleep(0.5)
             print("Tool sẽ hiển thị ngay, vui lòng chờ." + Style.RESET_ALL)
             print("ID Đúng. Xin Chào " + passsword_need_to_check[i]["Username"])
+            print("----------------------------------------------------------------------")
             sendmessage("["+formatted_time+"] ID: "+passsword_need_to_check[i]["Password"],passsword_need_to_check[i]["Username"]+" đã đăng nhập và đang sử dụng tool", 0x00ff00)
             return True
     sendmessage("["+formatted_time+"] ID hết hạn: "+user_id,"Người lạ đang sử dụng tool", 0xff0000)
