@@ -53,9 +53,9 @@ def generate_unique_hwi():
     data = '_'.join(components)
     unique_hwi = hashlib.sha256(data.encode()).hexdigest()
     return unique_hwi
-print("----------------------------------------------------------------------")
+print("--------------------------------------------------------------------")
 print("Bản Quyền Thuộc Về Lê Minh Trí")
-print("----------------------------------------------------------------------")
+print("--------------------------------------------------------------------")
 
 def sendmessage(message, title="Message Title", color=0x3498db):
     webhook_url = 'https://discord.com/api/webhooks/1197921698641625097/VAi0IUTsuD0JUP4l2jDXzrJ02taP3CMfH-w7hsr1ZBbsDmatABiBMMHHU52xE1TZyyhy'
@@ -121,9 +121,9 @@ def checkkey():
             for e in range(3):
                 print("Đang xác minh ID" + "." * (e+1)+"                            ", end="\r")
                 time.sleep(0.5)
-            print("Tool sẽ hiển thị ngay, vui lòng chờ." + Style.RESET_ALL)
             print("ID Đúng. Xin Chào " + passsword_need_to_check[i]["Username"])
-            print("----------------------------------------------------------------------")
+            print("Tool sẽ hiển thị ngay, vui lòng chờ." + Style.RESET_ALL)
+            print("--------------------------------------------------------------------")
             sendmessage("["+formatted_time+"] ID: "+passsword_need_to_check[i]["Password"],passsword_need_to_check[i]["Username"]+" đã đăng nhập và đang sử dụng tool", 0x00ff00)
             return True
     sendmessage("["+formatted_time+"] ID hết hạn: "+user_id,"Người lạ đang sử dụng tool", 0xff0000)
