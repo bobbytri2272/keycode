@@ -129,6 +129,10 @@ def checkkey():
     passsword_need_to_check = getid()
     for i in range(len(passsword_need_to_check)):
         if user_id ==  passsword_need_to_check[i]["Password"]:
+            for e in range(3):
+                print("Đang xác minh ID" + "." * (e+1)+"                            ", end="\r")
+                time.sleep(0.5)
+            print("Tool sẽ hiển thị ngay, vui lòng chờ." + Style.RESET_ALL)
             print("ID Đúng. Xin Chào " + passsword_need_to_check[i]["Username"])
             sendmessage("["+formatted_time+"] ID: "+passsword_need_to_check[i]["Password"],passsword_need_to_check[i]["Username"]+" đã đăng nhập và đang sử dụng tool", 0x00ff00)
             return True
@@ -141,12 +145,9 @@ if __name__ == "__main__":
         print("Đang tải ID của bạn" + "." * (i+1), end="\r")
         time.sleep(0.5)
     if checkkey() == True:
-        for i in range(3):
-            print("Đang xác minh ID" + "." * (i+1)+"                            ", end="\r")
-            time.sleep(0.5)
-        print("Tool sẽ hiển thị ngay, vui lòng chờ." + Style.RESET_ALL)
-
-            
+        print("Hello World")
+        #Your Code Here
+        
     else:
         print("["+formatted_time+"]: ID sai. Vui lòng liên hệ admin để cấp phép hoặc mua phép qua số Zalo: 0582932697." + Style.RESET_ALL)
         for i in range(60,-1,-1):
