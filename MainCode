@@ -1,0 +1,155 @@
+try:
+    import hashlib,socket,uuid,os,subprocess,requests,time,json,sys
+    from colorama import Fore, Style, init
+    from datetime import datetime
+except ImportError:
+    print("LỖI !!! Vui lòng liên hệ admin để báo lỗi và được khắc phục sớm nhất.")
+    os._exit(0)
+init()
+
+#Key Code
+
+def generate_unique_hwi():
+    def get_hostname():
+        return socket.gethostname()
+
+    def get_mac_address():
+        mac = uuid.UUID(int=uuid.getnode()).hex[-12:]
+        return ":".join([mac[e:e+2] for e in range(0, 11, 2)])
+
+    def get_disk_serial():
+        try:
+            if os.name == 'nt':  # Windows
+                result = subprocess.check_output("wmic diskdrive get serialnumber", shell=True).decode()
+                return result.split('\n')[1].strip()
+            else:  # Unix-like OS
+                result = subprocess.check_output("sudo hdparm -i /dev/sda | grep SerialNo", shell=True).decode()
+                return result.split()[1].strip()
+        except Exception as e:
+            return str(e)
+
+    def get_bios_serial():
+        try:
+            if os.name == 'nt':  # Windows
+                result = subprocess.check_output("wmic bios get serialnumber", shell=True).decode()
+                return result.split('\n')[1].strip()
+            else:  # Unix-like OS
+                result = subprocess.check_output("dmidecode -s system-serial-number", shell=True).decode()
+                return result.strip()
+        except Exception as e:
+            return str(e)
+    components = [get_hostname(), get_mac_address(), get_disk_serial(), get_bios_serial()]
+    data = '_'.join(components)
+    unique_hwi = hashlib.sha256(data.encode()).hexdigest()
+    return unique_hwi
+
+def print_colored_cycle(text, delay=0.1):
+    colors = [
+        "\033[31m",  # Red
+        "\033[32m",  # Green
+        "\033[33m",  # Yellow
+        "\033[34m",  # Blue
+        "\033[35m",  # Magenta
+        "\033[36m",  # Cyan
+        "\033[37m",  # White
+    ]
+    reset = "\033[0m"
+    
+    for i in range(len(text)):
+        color = colors[i % len(colors)]
+        sys.stdout.write(color + text[i] + reset)
+        sys.stdout.flush()
+        time.sleep(delay)
+    print()  # Move to the next line after printing the text
+
+# Example usage:
+#print_colored_cycle("Chào Mừng Đến Với Dream League Soccer Tool", 0.001)
+print("----------------------------------------------------------------------")
+print("Bản Quyền Thuộc Về Lê Minh Trí")
+print("----------------------------------------------------------------------")
+
+def sendmessage(message, title="Message Title", color=0x3498db):
+    webhook_url = 'https://discord.com/api/webhooks/1197921698641625097/VAi0IUTsuD0JUP4l2jDXzrJ02taP3CMfH-w7hsr1ZBbsDmatABiBMMHHU52xE1TZyyhy'
+    data = {
+        "embeds": [
+            {
+                "title": title,
+                "description": message,
+                "color": color
+            }
+        ]
+    }
+    headers = {
+        "Content-Type": "application/json"
+    }
+    response = requests.post(webhook_url, data=json.dumps(data), headers=headers)
+    if response.status_code != 204:
+        print(f"Failed to send message: {response.status_code}")
+#Red: 0xff0000
+#Green: 0x00ff00
+#Blue: 0x0000ff
+#Yellow: 0xffff00
+#Pink: 0xffc0cb
+#White: 0xffffff
+#Black: 0x000000
+#sendmessage("This is a colorful message!", "Custom Title", 0x00ff00)
+
+def gettime():
+    current_time = datetime.now().time()
+    formatted_time = current_time.strftime("%H:%M:%S")
+    return formatted_time
+
+def getid():
+    url = "https://raw.githubusercontent.com/bobbytri2272/keycode/main/Key1"
+    response = requests.get(url)
+    if response.status_code == 200:
+        passsword_need_to_check = []
+        password_from_web = response.text.strip().split('\n')
+        for line in password_from_web:
+            parts = line.strip().split('|')
+            if len(parts) == 2:
+                stored_password = parts[0].strip()
+                username = parts[1].strip()
+                base = {"Password": stored_password,
+                        "Username": username}
+                passsword_need_to_check.append(base)
+        return passsword_need_to_check
+    else:
+        print(Fore.RED + "Lỗi HTTP. Vui lòng liên hệ Admin để báo lỗi qua số Zalo: 0582932697 " + Style.RESET_ALL)
+        print(Fore.BLUE + "Cửa sổ sẽ đóng sau 10s..." + Style.RESET_ALL)
+        for i in range(9,-1,-1):
+                print(Fore.GREEN + "Cửa sổ sẽ đóng sau ",i,"s", end="\r")
+                time.sleep(1)
+        return False
+
+def checkkey():
+    user_id = generate_unique_hwi()
+    print("ID: "+user_id)
+    formatted_time = gettime()
+    passsword_need_to_check = getid()
+    for i in range(len(passsword_need_to_check)):
+        if user_id ==  passsword_need_to_check[i]["Password"]:
+            print("ID Đúng. Xin Chào " + passsword_need_to_check[i]["Username"])
+            sendmessage("["+formatted_time+"] ID: "+passsword_need_to_check[i]["Password"],passsword_need_to_check[i]["Username"]+" đã đăng nhập và đang sử dụng tool", 0x00ff00)
+            return True
+    sendmessage("["+formatted_time+"] ID hết hạn: "+user_id,"Người lạ đang sử dụng tool", 0xff0000)
+    print(Fore.RED + "ID hết hạn. Vui lòng liên hệ admin để cấp phép lại hoặc mua phép qua số Zalo: 0582932697." + Style.RESET_ALL)
+    return False
+if __name__ == "__main__":
+    formatted_time = gettime()
+    for i in range(3):
+        print("Đang tải ID của bạn" + "." * (i+1), end="\r")
+        time.sleep(0.5)
+    if checkkey() == True:
+        for i in range(3):
+            print("Đang xác minh ID" + "." * (i+1)+"                            ", end="\r")
+            time.sleep(0.5)
+        print("Tool sẽ hiển thị ngay, vui lòng chờ." + Style.RESET_ALL)
+
+            
+    else:
+        print("["+formatted_time+"]: ID sai. Vui lòng liên hệ admin để cấp phép hoặc mua phép qua số Zalo: 0582932697." + Style.RESET_ALL)
+        for i in range(60,-1,-1):
+            print(Fore.GREEN + "Cửa sổ sẽ đóng sau ",i,"s      ", end="\r")
+            time.sleep(1)
+        os._exit(0)
